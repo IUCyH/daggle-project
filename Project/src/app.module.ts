@@ -4,6 +4,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 import { WinstonModule } from "nest-winston";
 import { LogConfig } from "./configs/log.config";
+import { APP_INTERCEPTOR } from "@nestjs/core";
+import { LoggingInterceptor } from "./common/interceptor/logging.interceptor";
 
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -38,6 +40,12 @@ import { AppService } from "./app.service";
         })
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [
+        AppService,
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: LoggingInterceptor
+        }
+    ],
 })
 export class AppModule {}

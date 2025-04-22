@@ -7,9 +7,10 @@ const logFormat = format.printf(({ level, message, label, timestamp }) => {
 export const LogConfig = {
     format: format.combine(
         format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        format.label({ label: "Plan" }),
+        format.label({ label: "daggle" }),
         logFormat
     ),
+    level: process.env.NODE_ENV === "prod" ? "info" : "debug",
     transports: [
         new transports.Console({
             format: format.combine(
