@@ -28,7 +28,7 @@ describe("App Service", () => {
         await app.init();
     });
 
-    it("NODE_ENV == dev 라면 로깅이 찍혀야 함", async () => {
+    it("log config의 level이 debug 라면 로깅이 찍혀야 함", async () => {
         const result = await request.default(app.getHttpServer()).get("/");
         expect(result.status).toEqual(200);
     });
