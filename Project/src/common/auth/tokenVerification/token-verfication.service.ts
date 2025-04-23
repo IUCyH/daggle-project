@@ -45,6 +45,16 @@ export class TokenVerificationService {
         return tokenInfo.userId;
     }
 
+    async verifyAccessToken(payload: TokenPayload) {
+        const tokenInfo = await this.tokenInfoRepository.findOne({
+            where: { userId: payload.sub },
+            select: ["accessTokenVersion"]
+        });
+        if(!tokenInfo || payload.jti !== tokenInfo.accessTokenVersion) {
+            throw new UnauthorizedException("Invalid token");
+        }
+    }
+
     private isRefreshTokenExpired(tokenInfo: TokenInfo) {
         const now = Date.now();
         return now > tokenInfo.refreshTokenExpiresAt; // 토큰의 유효기간이 지났다면

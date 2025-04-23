@@ -10,6 +10,8 @@ import { LoggingInterceptor } from "./common/interceptor/logging.interceptor";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
+import { AuthSharedModule } from "./common/auth/auth-shared.module";
+
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -37,7 +39,8 @@ import { AppService } from "./app.service";
                 subscribers: [],
                 migrations: []
             })
-        })
+        }),
+        AuthSharedModule
     ],
     controllers: [AppController],
     providers: [
