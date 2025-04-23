@@ -1,9 +1,11 @@
 import {
     Entity,
     Column,
-    PrimaryGeneratedColumn
+    PrimaryGeneratedColumn,
+    OneToOne
 } from "typeorm";
 import { UserDto } from "../dto/user.dto";
+import { TokenInfo } from "../../../common/auth/tokenVerification/entity/token-info";
 
 @Entity()
 export class User {
@@ -25,6 +27,9 @@ export class User {
 
     @Column({ type: "timestamp", nullable: true })
     deletedAt!: string | null;
+
+    @OneToOne(() => TokenInfo, tokenInfo => tokenInfo.user)
+    tokenInfo!: TokenInfo;
 
     toDto(isMe: boolean): UserDto {
         const user = new UserDto();
