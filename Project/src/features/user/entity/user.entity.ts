@@ -23,6 +23,9 @@ export class User {
     @Column({ type: "varchar", length: 128 })
     password!: string;
 
+    @Column({ type: "timestamp", nullable: true })
+    deletedAt!: string | null;
+
     toDto(isMe: boolean): UserDto {
         const user = new UserDto();
         user.id = this.id;
