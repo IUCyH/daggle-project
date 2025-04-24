@@ -5,8 +5,12 @@ import {
     Post,
     Put,
     Delete,
-    Body
+    Body,
+    Param,
+    UseGuards
 } from "@nestjs/common";
+import { JwtGuard } from "../../common/auth/guards/jwt.guard";
+import { CurrentUser } from "../../common/decorators/current-user.decorator";
 import { USER_SERVICE, IUserService } from "./interface/user-service.interface";
 import { UserInfo } from "../../common/types/user-info.type";
 
@@ -14,7 +18,6 @@ import { RequestSuccessDto } from "../../common/dto/request-success.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 
-// TODO: guard 구현 및 유저 정보 파싱 decorator 구현
 @Controller("users")
 export class UserController {
 
@@ -23,14 +26,16 @@ export class UserController {
         private readonly userService: IUserService
     ) {}
 
+    @UseGuards(JwtGuard)
     @Get("me")
-    async getMyUser(user: UserInfo) {
+    async getMyUser(@CurrentUser() user: UserInfo) {
         return await this.userService.getMyUserById(user.id);
     }
 
+    @UseGuards(JwtGuard)
     @Get(":id")
-    async getUser(user: UserInfo) {
-        return await this.userService.getUserById(user.id);
+    async getUser(@Param("id") id: number) {
+        return await this.userService.getUserById(id);
     }
 
     @Post()
@@ -39,14 +44,16 @@ export class UserController {
         return { id: id };
     }
 
+    @UseGuards(JwtGuard)
     @Put("me")
-    async updateUser(user: UserInfo, @Body() body: UpdateUserDto) {
+    async updateUser(@CurrentUser() user: UserInfo, @Body() body: UpdateUserDto) {
         await this.userService.updateUser(user.id, body);
         return new RequestSuccessDto();
     }
 
+    @UseGuards(JwtGuard)
     @Delete("me")
-    async deleteUser(user: UserInfo) {
+    async deleteUser(@CurrentUser() user: UserInfo) {
         await this.userService.deleteUser(user.id);
         return new RequestSuccessDto();
     }

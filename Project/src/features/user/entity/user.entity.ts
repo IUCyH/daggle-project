@@ -5,7 +5,7 @@ import {
     OneToOne
 } from "typeorm";
 import { UserDto } from "../dto/user.dto";
-import { TokenInfo } from "../../../common/auth/tokenVerification/entity/token-info";
+import { TokenInfo } from "../../../common/auth/tokenVerification/entity/token-info.entity";
 
 @Entity()
 export class User {

@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
 import { TokenPayload } from "../../types/token-payload.type";
-import { TokenInfo } from "./entity/token-info";
+import { TokenInfo } from "./entity/token-info.entity";
 import { UnauthorizedException } from "../../exceptions/unauthorized.exception";
 
 @Injectable()
