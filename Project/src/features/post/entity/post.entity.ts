@@ -1,15 +1,21 @@
 import {
     Entity,
     PrimaryGeneratedColumn,
-    Column
+    Column,
+    ManyToOne
 } from "typeorm";
+import { User } from "../../user/entity/user.entity";
 import { PostDto } from "../dto/post.dto";
+import { UserInfo } from "../../../common/types/user-info.type";
 
 @Entity("posts")
 export class Post {
 
     @PrimaryGeneratedColumn()
     id!: number;
+
+    @Column({ type: "int" })
+    userId!: number;
 
     @Column({ type: "varchar", length: 32 })
     title!: string;
@@ -29,8 +35,12 @@ export class Post {
     @Column({ type: "timestamp" })
     createdAt!: string;
 
-    toDto(): PostDto {
+    @ManyToOne(() => User, user => user.posts)
+    user!: User;
+
+    toDto(user: UserInfo): PostDto {
         const post = new PostDto();
+        post.user = user;
         post.title = this.title;
         post.content = this.content;
         post.likeCount = this.likeCount;

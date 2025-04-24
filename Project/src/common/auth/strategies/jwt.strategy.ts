@@ -17,6 +17,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
 
     async validate(payload: TokenPayload): Promise<UserInfo> {
         await this.tokenVerificationService.verifyAccessToken(payload);
-        return { id: payload.sub };
+        return { id: payload.sub, nickname: "" };
     }
 }

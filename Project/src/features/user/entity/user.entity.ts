@@ -2,8 +2,10 @@ import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
-    OneToOne
+    OneToOne,
+    OneToMany
 } from "typeorm";
+import { Post } from "../../post/entity/post.entity";
 import { UserDto } from "../dto/user.dto";
 import { TokenInfo } from "../../../common/auth/tokenVerification/entity/token-info.entity";
 
@@ -30,6 +32,9 @@ export class User {
 
     @OneToOne(() => TokenInfo, tokenInfo => tokenInfo.user)
     tokenInfo!: TokenInfo;
+
+    @OneToMany(() => Post, post => post.user)
+    posts!: Post[];
 
     toDto(isMe: boolean): UserDto {
         const user = new UserDto();

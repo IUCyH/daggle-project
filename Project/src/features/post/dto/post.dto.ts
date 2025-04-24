@@ -1,5 +1,8 @@
+import { UserInfo } from "../../../common/types/user-info.type";
+
 export class PostDto {
 
+    user!: UserInfo;
     title!: string;
     content!: string;
     likeCount!: number;
