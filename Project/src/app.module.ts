@@ -10,7 +10,7 @@ import { LoggingInterceptor } from "./common/interceptor/logging.interceptor";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
-import { AuthSharedModule } from "./common/auth/auth-shared.module";
+import { AuthCommonModule } from "./common/auth/auth-common.module";
 
 @Module({
     imports: [
@@ -40,7 +40,7 @@ import { AuthSharedModule } from "./common/auth/auth-shared.module";
                 migrations: []
             })
         }),
-        AuthSharedModule
+        AuthCommonModule
     ],
     controllers: [AppController],
     providers: [
