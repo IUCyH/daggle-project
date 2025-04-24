@@ -7,8 +7,11 @@ import {
     Delete,
     Body,
     Param,
-    UseGuards
+    UseGuards,
+    UsePipes
 } from "@nestjs/common";
+import { ValidationPipe } from "@nestjs/common";
+import { AllFiledUndefinedTestPipe } from "../../common/pipes/all-filed-undefined-test.pipe";
 import { JwtGuard } from "../../common/auth/guards/jwt.guard";
 import { CurrentUser } from "../../common/decorators/current-user.decorator";
 import { USER_SERVICE, IUserService } from "./interface/user-service.interface";
@@ -38,12 +41,17 @@ export class UserController {
         return await this.userService.getUserById(id);
     }
 
+    @UsePipes(new ValidationPipe({ transform: true }))
     @Post()
     async createUser(@Body() body: CreateUserDto) {
         const id = await this.userService.createUser(body);
         return { id: id };
     }
 
+    @UsePipes(
+        new AllFiledUndefinedTestPipe(),
+        new ValidationPipe({ transform: true })
+    )
     @UseGuards(JwtGuard)
     @Put("me")
     async updateUser(@CurrentUser() user: UserInfo, @Body() body: UpdateUserDto) {
