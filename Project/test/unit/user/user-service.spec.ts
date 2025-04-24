@@ -2,15 +2,15 @@ import { Test } from "@nestjs/testing";
 import { getRepositoryToken, TypeOrmModule } from "@nestjs/typeorm";
 import mockUserRepository from "./mock-user.repository";
 
-import { IUserService } from "../../src/features/user/interface/user-service.interface";
-import { CreateUserDto } from "../../src/features/user/dto/create-user.dto";
-import { UpdateUserDto } from "../../src/features/user/dto/update-user.dto";
-import { UserService } from "../../src/features/user/user.service";
-import { HashHelperService } from "../../src/common/helpers/hash-helper.service";
-import { User } from "../../src/features/user/entity/user.entity";
+import { IUserService } from "../../../src/features/user/interface/user-service.interface";
+import { CreateUserDto } from "../../../src/features/user/dto/create-user.dto";
+import { UpdateUserDto } from "../../../src/features/user/dto/update-user.dto";
+import { UserService } from "../../../src/features/user/user.service";
+import { HashHelperService } from "../../../src/common/helpers/hash-helper.service";
+import { User } from "../../../src/features/user/entity/user.entity";
 
-import { NotFoundException } from "../../src/common/exceptions/not-found.exception";
-import { BadRequestException } from "../../src/common/exceptions/bad-request.exception";
+import { NotFoundException } from "../../../src/common/exceptions/not-found.exception";
+import { BadRequestException } from "../../../src/common/exceptions/bad-request.exception";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 import { Repository } from "typeorm";
 
