@@ -14,7 +14,7 @@ import { JwtGuard } from "./guards/jwt.guard";
         PassportModule,
         JwtModule.registerAsync({
             useFactory: () => ({
-                secret: process.env.JWT_KEY ?? "",
+                secret: process.env.JWT_KEY ?? "test",
                 signOptions: { expiresIn: "1h" }
             })
         }),
