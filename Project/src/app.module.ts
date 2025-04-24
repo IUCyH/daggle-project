@@ -11,6 +11,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
 import { AuthCommonModule } from "./common/auth/auth-common.module";
+import { UserModule } from "./features/user/user.module";
 
 @Module({
     imports: [
@@ -40,7 +41,8 @@ import { AuthCommonModule } from "./common/auth/auth-common.module";
                 migrations: []
             })
         }),
-        AuthCommonModule
+        AuthCommonModule,
+        UserModule
     ],
     controllers: [AppController],
     providers: [
