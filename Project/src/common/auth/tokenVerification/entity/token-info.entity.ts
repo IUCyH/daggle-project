@@ -6,12 +6,12 @@ import {
 } from "typeorm";
 import { User } from "../../../../features/user/entity/user.entity";
 
-@Entity()
+@Entity("token_infos")
 export class TokenInfo {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ type: "int" })
+    @Column({ type: "int", unique: true })
     userId!: number;
 
     @Column({ type: "varchar", length: 32 })

@@ -56,7 +56,7 @@ export class TokenVerificationService {
     }
 
     private isRefreshTokenExpired(tokenInfo: TokenInfo) {
-        const now = Date.now();
+        const now = Math.floor(Date.now() / 1000);
         return now > tokenInfo.refreshTokenExpiresAt; // 토큰의 유효기간이 지났다면
     }
 }

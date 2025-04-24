@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, IsNull } from "typeorm";
 import { User } from "./entity/user.entity";
+import { TokenInfo } from "../../common/auth/tokenVerification/entity/token-info.entity";
 import { HashHelperService } from "../../common/helpers/hash-helper.service";
 
 import { IUserService } from "./interface/user-service.interface";
@@ -18,6 +19,8 @@ export class UserService implements IUserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        @InjectRepository(TokenInfo)
+        private readonly tokenInfoRepository: Repository<TokenInfo>,
         private readonly hashHelperService: HashHelperService
     ) {}
 
@@ -103,6 +106,7 @@ export class UserService implements IUserService {
             throw new NotFoundException("User not found");
         }
 
+        await this.tokenInfoRepository.delete({ userId: id });
         await this.userRepository.update({ id: id }, { deletedAt: new Date().toISOString() });
     }
 

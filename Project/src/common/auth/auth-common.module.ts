@@ -14,7 +14,7 @@ import { JwtGuard } from "./guards/jwt.guard";
         PassportModule,
         JwtModule.registerAsync({
             useFactory: () => ({
-                secret: process.env.JWT_KEY,
+                secret: process.env.JWT_KEY ?? "",
                 signOptions: { expiresIn: "1h" }
             })
         }),
@@ -27,6 +27,7 @@ import { JwtGuard } from "./guards/jwt.guard";
         JwtGuard
     ],
     exports: [
+        JwtModule,
         TokenVerificationService,
         JwtStrategy,
         JwtGuard

@@ -1,12 +1,12 @@
 import { Test } from "@nestjs/testing";
 import { getRepositoryToken, TypeOrmModule } from "@nestjs/typeorm";
-import mockUserRepository from "./mock-user.repository";
 
 import { IUserService } from "../../../src/features/user/interface/user-service.interface";
 import { CreateUserDto } from "../../../src/features/user/dto/create-user.dto";
 import { UpdateUserDto } from "../../../src/features/user/dto/update-user.dto";
 import { UserService } from "../../../src/features/user/user.service";
 import { HashHelperService } from "../../../src/common/helpers/hash-helper.service";
+import { TokenInfo } from "../../../src/common/auth/tokenVerification/entity/token-info.entity";
 import { User } from "../../../src/features/user/entity/user.entity";
 
 import { NotFoundException } from "../../../src/common/exceptions/not-found.exception";
@@ -36,12 +36,13 @@ describe("UserService", () => {
                             timezone: "Z",
                             dateStrings: true
                         },
-                        entities: [__dirname + "/../../src/**/*.entity.{js,ts}"],
+                        entities: [__dirname + "/../../../src/**/*.entity.{js,ts}"],
                         subscribers: [],
                         migrations: []
                     })
                 }),
-                TypeOrmModule.forFeature([User])
+                TypeOrmModule.forFeature([User]),
+                TypeOrmModule.forFeature([TokenInfo])
             ],
             providers: [
                 UserService,
