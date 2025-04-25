@@ -15,6 +15,7 @@ import {
     UseInterceptors,
     UsePipes,
     ValidationPipe,
+    ParseIntPipe,
     BadRequestException,
     ForbiddenException
 } from "@nestjs/common";
@@ -35,6 +36,7 @@ import { UpdatePostDto } from "./dto/update-post.dto";
 import { FileDto } from "./dto/file.dto";
 import { PhotoDto } from "./dto/photo.dto";
 import { FileHelperService } from "../../common/helpers/file-helper.service";
+import { AllFiledUndefinedTestPipe } from "../../common/pipes/all-filed-undefined-test.pipe";
 
 @Controller("posts")
 export class PostController {
@@ -63,12 +65,12 @@ export class PostController {
     }
 
     @Get(":id/detail")
-    async getPostDetail(@Param("id") id: number) {
+    async getPostDetail(@Param("id", ParseIntPipe) id: number) {
         return await this.postService.getPostDetail(id);
     }
 
     @Post(":id/watch-count")
-    async increaseWatchCount(@Param("id") id: number) {
+    async increaseWatchCount(@Param("id", ParseIntPipe) id: number) {
         await this.postService.increaseWatchCount(id);
         return new RequestSuccessDto();
     }
@@ -99,7 +101,7 @@ export class PostController {
         })
     )
     @Post(":id/files")
-    async uploadFiles(@Param("id") id: number, @UploadedFiles() files: Express.Multer.File[]) {
+    async uploadFiles(@Param("id", ParseIntPipe) id: number, @UploadedFiles() files: Express.Multer.File[]) {
         if(!files || files.length === 0) {
             throw new BadRequestException("No files uploaded");
         }
@@ -138,7 +140,7 @@ export class PostController {
         })
     )
     @Post(":id/photos")
-    async uploadPhotos(@Param("id") id: number, @UploadedFiles() files: Express.Multer.File[]) {
+    async uploadPhotos(@Param("id", ParseIntPipe) id: number, @UploadedFiles() files: Express.Multer.File[]) {
         if(!files || files.length === 0) {
             throw new BadRequestException("No files uploaded");
         }
@@ -158,9 +160,13 @@ export class PostController {
         return { id: id };
     }
 
+    @UsePipes(
+        new AllFiledUndefinedTestPipe(),
+        new ValidationPipe({ transform: true })
+    )
     @UseGuards(JwtGuard)
     @Patch(":id")
-    async updatePost(@CurrentUser() user: UserInfo, @Param("id") id: number, @Body() body: UpdatePostDto) {
+    async updatePost(@CurrentUser() user: UserInfo, @Param("id", ParseIntPipe) id: number, @Body() body: UpdatePostDto) {
         const isAuthor = await this.postService.checkIsAuthor(id, user.id);
         if(!isAuthor) {
             throw new ForbiddenException("Permission denied");
@@ -172,7 +178,7 @@ export class PostController {
 
     @UseGuards(JwtGuard)
     @Delete(":id")
-    async deletePost(@CurrentUser() user: UserInfo, @Param("id") id: number) {
+    async deletePost(@CurrentUser() user: UserInfo, @Param("id", ParseIntPipe) id: number) {
         const isAuthor = await this.postService.checkIsAuthor(id, user.id);
         if(!isAuthor) {
             throw new ForbiddenException("Permission denied");

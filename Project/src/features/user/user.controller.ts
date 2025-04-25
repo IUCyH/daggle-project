@@ -8,7 +8,8 @@ import {
     Body,
     Param,
     UseGuards,
-    UsePipes
+    UsePipes,
+    ParseIntPipe
 } from "@nestjs/common";
 import { ValidationPipe } from "@nestjs/common";
 import { AllFiledUndefinedTestPipe } from "../../common/pipes/all-filed-undefined-test.pipe";
@@ -37,7 +38,7 @@ export class UserController {
 
     @UseGuards(JwtGuard)
     @Get(":id")
-    async getUser(@Param("id") id: number) {
+    async getUser(@Param("id", ParseIntPipe) id: number) {
         return await this.userService.getUserById(id);
     }
 
