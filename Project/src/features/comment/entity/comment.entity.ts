@@ -1,8 +1,13 @@
 import {
     Entity,
     PrimaryGeneratedColumn,
-    Column
+    Column,
+    ManyToOne,
+    OneToMany
 } from "typeorm";
+import { User } from "../../user/entity/user.entity";
+import { Post } from "../../post/entity/post.entity";
+import { CommentDto } from "../dto/comment.dto";
 
 @Entity("comments")
 export class Comment {
@@ -24,4 +29,26 @@ export class Comment {
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
     createdAt!: string;
+
+    @ManyToOne(() => User, user => user.comments)
+    user!: User;
+
+    @ManyToOne(() => Post, post => post.comments)
+    post!: Post;
+
+    @ManyToOne(() => Comment, comment => comment.replies)
+    parent!: Comment;
+
+    @OneToMany(() => Comment, comment => comment.parent)
+    replies!: Comment[];
+
+    toDto(): CommentDto {
+        const comment = new CommentDto();
+        comment.id = this.id;
+        comment.user = { id: this.user?.id ?? 0, nickname: this.user?.nickname ?? "삭제된 사용자" };
+        comment.content = this.content;
+        comment.createdAt = this.createdAt;
+        comment.replies = this.replies;
+        return comment;
+    }
 }

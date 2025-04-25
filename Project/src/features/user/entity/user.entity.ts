@@ -6,6 +6,7 @@ import {
     OneToMany
 } from "typeorm";
 import { Post } from "../../post/entity/post.entity";
+import { Comment } from "../../comment/entity/comment.entity";
 import { UserDto } from "../dto/user.dto";
 import { TokenInfo } from "../../../common/auth/tokenVerification/entity/token-info.entity";
 
@@ -35,6 +36,9 @@ export class User {
 
     @OneToMany(() => Post, post => post.user)
     posts!: Post[];
+
+    @OneToMany(() => Comment, comment => comment.user)
+    comments!: Comment[];
 
     toDto(isMe: boolean): UserDto {
         const user = new UserDto();

@@ -6,6 +6,7 @@ import {
     ManyToOne
 } from "typeorm";
 import { User } from "../../user/entity/user.entity";
+import { Comment } from "../../comment/entity/comment.entity";
 import { PostFile } from "./post-file.entity";
 import { PostPhoto } from "./post-photo.entity";
 import { PostDto } from "../dto/post.dto";
@@ -44,6 +45,9 @@ export class Post {
     @ManyToOne(() => User, user => user.posts)
     user!: User;
 
+    @OneToMany(() => Comment, comment => comment.post)
+    comments!: Comment[];
+
     @OneToMany(() => PostFile, postFile => postFile.post)
     postFiles!: PostFile[];
 
@@ -53,7 +57,7 @@ export class Post {
     toDto(): PostDto {
         const post = new PostDto();
         post.id = this.id;
-        post.user = { id: this.user.id ?? 0, nickname: this.user.nickname ?? "삭제된 사용자" };
+        post.user = { id: this.user?.id ?? 0, nickname: this.user?.nickname ?? "삭제된 사용자" };
         post.title = this.title;
         post.content = this.content;
         post.likeCount = this.likeCount;
