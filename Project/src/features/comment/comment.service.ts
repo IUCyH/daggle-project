@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Brackets, Repository } from "typeorm";
+import { Brackets, Repository, IsNull } from "typeorm";
 import { Comment } from "./entity/comment.entity";
 import { Post } from "../post/entity/post.entity";
 import { ICommentService } from "./interface/comment-service.interface";
@@ -86,9 +86,11 @@ export class CommentService implements ICommentService {
         if(!userExists) {
             throw new NotFoundException("User not found");
         }
-        const commentExists = await this.commentRepository.exists({ where: { id: commentId } });
+        const commentExists = await this.commentRepository.exists({
+            where: { id: commentId, parentId: IsNull() },
+        }); // 답글의 depth를 1로 고정(루트 댓글에만 답글을 달 수 있음, 순환 참조 및 부수효과 방지)
         if(!commentExists) {
-            throw new NotFoundException("Comment not found");
+            throw new NotFoundException("Comment not found or not a root comment");
         }
 
         const result = await this.commentRepository
