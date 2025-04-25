@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, IsNull } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 
 import { User } from "../user/entity/user.entity";
 import { TokenInfo } from "../../common/auth/tokenVerification/entity/token-info.entity";
