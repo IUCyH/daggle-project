@@ -81,6 +81,8 @@ export class PostService implements IPostService {
             .select(["post.id"])
             .leftJoin("post.postFiles", "postFile")
             .addSelect(["postFile.name", "postFile.url"])
+            .leftJoin("post.postPhotos", "postPhoto")
+            .addSelect(["postPhoto.url"])
             .where("post.id = :id", { id: id })
             .getOne();
         if(!post) {
