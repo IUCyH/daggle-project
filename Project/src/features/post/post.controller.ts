@@ -120,6 +120,7 @@ export class PostController {
             limits: { fileSize: 5 * 1024 * 1024 } // 5MB
         })
     )
+    @Post(":id/photos")
     async uploadPhotos(@Param("id") id: number, @UploadedFiles() files: Express.Multer.File[]) {
         if(!files || files.length === 0) {
             throw new BadRequestException("No files uploaded");
