@@ -15,6 +15,7 @@ import { UserCommonModule } from "./common/service/user/user-common.module";
 import { AuthModule } from "./features/auth/auth.module";
 import { UserModule } from "./features/user/user.module";
 import { PostModule } from "./features/post/post.module";
+import { CommentModule } from "./features/comment/comment.module";
 
 @Module({
     imports: [
@@ -48,7 +49,8 @@ import { PostModule } from "./features/post/post.module";
         UserCommonModule,
         AuthModule,
         UserModule,
-        PostModule
+        PostModule,
+        CommentModule
     ],
     controllers: [AppController],
     providers: [
