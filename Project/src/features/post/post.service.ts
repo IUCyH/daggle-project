@@ -1,15 +1,23 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { InjectRepository, InjectDataSource } from "@nestjs/typeorm";
+import { Repository, DataSource } from "typeorm";
 import { Post } from "./entity/post.entity";
+import { PostFile } from "./entity/post-file.entity";
+import { PostPhoto } from "./entity/post-photo.entity";
+
 import { UserCommonService } from "../../common/service/user/user-common.service";
 import { IPostService, OrderValues } from "./interface/post-service.interface";
+
 import { PostDto } from "./dto/post.dto";
 import { GetPostDto } from "./dto/get-post.dto";
 import { SearchPostDto } from "./dto/search-post.dto";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { UpdatePostDto } from "./dto/update-post.dto";
+import { FileDto } from "./dto/file.dto";
+
 import { NotFoundException } from "../../common/exceptions/not-found.exception";
+import { PostDetailDto } from "./dto/post-detail.dto";
+import { PhotoDto } from "./dto/photo.dto";
 
 @Injectable()
 export class PostService implements IPostService {
@@ -17,6 +25,8 @@ export class PostService implements IPostService {
     constructor(
         @InjectRepository(Post)
         private readonly postRepository: Repository<Post>,
+        @InjectDataSource()
+        private readonly dataSource: DataSource,
         private readonly userCommonService: UserCommonService
     ) {}
 
@@ -65,6 +75,21 @@ export class PostService implements IPostService {
         return posts.map(post => post.toDto());
     }
 
+    async getPostDetail(id: number): Promise<PostDetailDto> {
+        const post = await this.postRepository
+            .createQueryBuilder("post")
+            .select(["post.id"])
+            .leftJoin("post.postFiles", "postFile")
+            .addSelect(["postFile.name", "postFile.url"])
+            .where("post.id = :id", { id: id })
+            .getOne();
+        if(!post) {
+            throw new NotFoundException("Post not found");
+        }
+
+        return post.toDetailDto();
+    }
+
     async createPost(userId: number, post: CreatePostDto): Promise<number> {
         const exists = await this.userCommonService.checkUserIdExists(userId);
         if(!exists) {
@@ -97,12 +122,66 @@ export class PostService implements IPostService {
             .execute();
     }
 
+    async updateFileLink(id: number, files: FileDto[]): Promise<void> {
+        const values = files.map(file => ({ postId: id, name: file.name, url: file.url }));
+
+        const queryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+
+        try {
+            await queryRunner.manager.delete(PostFile, { postId: id });
+            if(values.length > 0) {
+                await queryRunner.manager
+                    .createQueryBuilder()
+                    .insert()
+                    .into(PostFile)
+                    .values(values)
+                    .execute();
+            }
+
+            await queryRunner.commitTransaction();
+            await queryRunner.release();
+        } catch(error) {
+            await queryRunner.rollbackTransaction();
+            await queryRunner.release();
+            throw error;
+        }
+    }
+
+    async updatePhotoLink(id: number, photos: PhotoDto[]): Promise<void> {
+        const values = photos.map(photo => ({ postId: id, url: photo.url }));
+
+        const queryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+
+        try {
+            await queryRunner.manager.delete(PostPhoto, { postId: id });
+            if(values.length > 0) {
+                await queryRunner.manager
+                    .createQueryBuilder()
+                    .insert()
+                    .into(PostPhoto)
+                    .values(values)
+                    .execute();
+            }
+
+            await queryRunner.commitTransaction();
+            await queryRunner.release();
+        } catch(error) {
+            await queryRunner.rollbackTransaction();
+            await queryRunner.release();
+            throw error;
+        }
+    }
+
     async increaseWatchCount(id: number): Promise<void> {
         await this.postRepository.increment({ id: id }, "watchCount", 1);
     }
 
     async deletePost(id: number): Promise<void> {
-        await this.postRepository.delete({ id: id });
+        await this.postRepository.update({ id: id }, { deletedAt: new Date().toISOString() });
     }
 
     private getOrderCondition(order: OrderValues) {

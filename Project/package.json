@@ -15,6 +15,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dotenv": "^16.5.0",
+    "multer": "^1.4.5-lts.2",
     "nest-winston": "^1.10.2",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
@@ -24,12 +25,14 @@
     "typeorm-naming-strategies": "^4.1.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.0",
+    "uuidv4": "^6.2.13",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@nestjs/testing": "^11.0.20",
     "@types/jest": "^29.5.14",
+    "@types/multer": "^1.4.12",
     "@types/node": "^22.14.1",
     "@types/supertest": "^6.0.3",
     "jest": "^29.7.0",

@@ -1,6 +1,15 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+    Column,
+    PrimaryGeneratedColumn,
+    Entity,
+    OneToMany,
+    ManyToOne
+} from "typeorm";
 import { User } from "../../user/entity/user.entity";
+import { PostFile } from "./post-file.entity";
+import { PostPhoto } from "./post-photo.entity";
 import { PostDto } from "../dto/post.dto";
+import { PostDetailDto } from "../dto/post-detail.dto";
 
 @Entity("posts")
 export class Post {
@@ -29,8 +38,17 @@ export class Post {
     @Column({ type: "timestamp" })
     createdAt!: string;
 
+    @Column({ type: "timestamp" })
+    deletedAt!: string;
+
     @ManyToOne(() => User, user => user.posts)
     user!: User;
+
+    @OneToMany(() => PostFile, postFile => postFile.post)
+    postFiles!: PostFile[];
+
+    @OneToMany(() => PostPhoto, postPhoto => postPhoto.post)
+    postPhotos!: PostPhoto[];
 
     toDto(): PostDto {
         const post = new PostDto();
@@ -41,6 +59,18 @@ export class Post {
         post.commentCount = this.commentCount;
         post.watchCount = this.watchCount;
         post.createdAt = this.createdAt;
+        return post;
+    }
+
+    toDetailDto(): PostDetailDto {
+        const post = new PostDetailDto();
+        post.id = this.id;
+        post.files = this.postFiles.map(file => {
+            return { name: file.name, url: file.url };
+        });
+        post.photos = this.postPhotos.map(photo => {
+            return { url: photo.url };
+        });
         return post;
     }
 }
