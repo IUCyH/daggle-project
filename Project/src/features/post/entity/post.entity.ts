@@ -46,13 +46,13 @@ export class Post {
     user!: User;
 
     @OneToMany(() => Comment, comment => comment.post)
-    comments: Comment[] = [];
+    comments!: Comment[];
 
     @OneToMany(() => PostFile, postFile => postFile.post)
-    postFiles: PostFile[] = [];
+    postFiles!: PostFile[];
 
     @OneToMany(() => PostPhoto, postPhoto => postPhoto.post)
-    postPhotos: PostPhoto[] = [];
+    postPhotos!: PostPhoto[];
 
     toDto(): PostDto {
         const post = new PostDto();
@@ -70,12 +70,12 @@ export class Post {
     toDetailDto(): PostDetailDto {
         const post = new PostDetailDto();
         post.id = this.id;
-        post.files = this.postFiles.map(file => {
+        post.files = this.postFiles?.map(file => {
             return { name: file.name, url: file.url };
-        });
-        post.photos = this.postPhotos.map(photo => {
+        }) ?? [];
+        post.photos = this.postPhotos?.map(photo => {
             return { url: photo.url };
-        });
+        }) ?? [];
         return post;
     }
 }

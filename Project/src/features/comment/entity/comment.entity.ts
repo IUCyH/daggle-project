@@ -43,7 +43,7 @@ export class Comment {
     parent!: Comment;
 
     @OneToMany(() => Comment, comment => comment.parent)
-    replies: Comment[] = [];
+    replies!: Comment[];
 
     toDto(): CommentDto {
         const comment = new CommentDto();
@@ -51,7 +51,7 @@ export class Comment {
         comment.user = { id: this.user?.id ?? 0, nickname: this.user?.nickname ?? "삭제된 사용자" };
         comment.content = this.content;
         comment.createdAt = this.createdAt;
-        comment.replies = this.replies.map(reply => reply.toDto());
+        comment.replies = this.replies?.map(reply => reply.toDto()) ?? [];
         return comment;
     }
 }

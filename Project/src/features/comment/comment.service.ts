@@ -2,10 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Brackets, Repository } from "typeorm";
 import { Comment } from "./entity/comment.entity";
+import { Post } from "../post/entity/post.entity";
 import { ICommentService } from "./interface/comment-service.interface";
 import { UserCommonService } from "../../common/service/user/user-common.service";
 import { CommentDto } from "./dto/comment.dto";
-import { PostDto } from "../post/dto/post.dto";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
 import { NotFoundException } from "../../common/exceptions/not-found.exception";
@@ -16,8 +16,8 @@ export class CommentService implements ICommentService {
     constructor(
         @InjectRepository(Comment)
         private readonly commentRepository: Repository<Comment>,
-        @InjectRepository(PostDto)
-        private readonly postRepository: Repository<PostDto>,
+        @InjectRepository(Post)
+        private readonly postRepository: Repository<Post>,
         private readonly userCommonService: UserCommonService
     ) {}
 
