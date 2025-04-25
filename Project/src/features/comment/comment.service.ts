@@ -35,7 +35,7 @@ export class CommentService implements ICommentService {
             ])
             .leftJoin("comment.user", "user")
             .addSelect(["user.id", "user.nickname"])
-            .where("comment.postId = :postId", { postId })
+            .where("comment.postId = :postId", { postId: postId })
             .andWhere("comment.parentId IS NULL")
             .andWhere(
                 new Brackets(qb => {

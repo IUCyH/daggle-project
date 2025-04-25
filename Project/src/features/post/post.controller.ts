@@ -26,7 +26,8 @@ import { diskStorage } from "multer";
 import { CurrentUser } from "../../common/decorators/current-user.decorator";
 import { UserInfo } from "../../common/types/user-info.type";
 
-import { IPostService, POST_SERVICE } from "./interface/post-service.interface";
+import { POST_SERVICE, IPostService } from "./interface/post-service.interface";
+import { COMMENT_SERVICE, ICommentService } from "../comment/interface/comment-service.interface";
 
 import { RequestSuccessDto } from "../../common/dto/request-success.dto";
 import { GetPostDto } from "./dto/get-post.dto";
@@ -43,7 +44,9 @@ export class PostController {
 
     constructor(
         @Inject(POST_SERVICE)
-        private readonly postService: IPostService
+        private readonly postService: IPostService,
+        @Inject(COMMENT_SERVICE)
+        private readonly commentService: ICommentService
     ) {}
 
     @UsePipes(new ValidationPipe({ transform: true }))
@@ -67,6 +70,11 @@ export class PostController {
     @Get(":id/detail")
     async getPostDetail(@Param("id", ParseIntPipe) id: number) {
         return await this.postService.getPostDetail(id);
+    }
+
+    @Get(":id/comments")
+    async getComments(@Param("id", ParseIntPipe) id: number) {
+        return await this.commentService.getComments(id);
     }
 
     @Post(":id/watch-count")
