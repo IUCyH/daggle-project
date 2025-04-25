@@ -3,7 +3,7 @@ import {
     Inject,
     Get,
     Post,
-    Put,
+    Patch,
     Delete,
     Body,
     Param,
@@ -53,7 +53,7 @@ export class UserController {
         new ValidationPipe({ transform: true })
     )
     @UseGuards(JwtGuard)
-    @Put("me")
+    @Patch("me")
     async updateUser(@CurrentUser() user: UserInfo, @Body() body: UpdateUserDto) {
         await this.userService.updateUser(user.id, body);
         return new RequestSuccessDto();
