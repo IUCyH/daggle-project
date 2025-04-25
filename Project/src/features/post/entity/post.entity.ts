@@ -52,6 +52,7 @@ export class Post {
 
     toDto(): PostDto {
         const post = new PostDto();
+        post.id = this.id;
         post.user = { id: this.user.id ?? 0, nickname: this.user.nickname ?? "삭제된 사용자" };
         post.title = this.title;
         post.content = this.content;

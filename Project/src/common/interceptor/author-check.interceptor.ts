@@ -21,7 +21,7 @@ export class AuthorCheckInterceptor implements NestInterceptor {
         const user = request.user;
         const postId = Number(request.params.id);
 
-        const isAuthor = await this.postService.checkIsAuthor(user.id, postId);
+        const isAuthor = await this.postService.checkIsAuthor(postId, user.id);
         if(!isAuthor) {
             throw new ForbiddenException("Permission denied");
         }
