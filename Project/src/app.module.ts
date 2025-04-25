@@ -11,6 +11,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
 import { AuthCommonModule } from "./common/auth/auth-common.module";
+import { UserCommonModule } from "./common/service/user/user-common.module";
 import { AuthModule } from "./features/auth/auth.module";
 import { UserModule } from "./features/user/user.module";
 
@@ -43,6 +44,7 @@ import { UserModule } from "./features/user/user.module";
             })
         }),
         AuthCommonModule,
+        UserCommonModule,
         AuthModule,
         UserModule
     ],

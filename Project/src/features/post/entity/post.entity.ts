@@ -1,12 +1,6 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    ManyToOne
-} from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../user/entity/user.entity";
 import { PostDto } from "../dto/post.dto";
-import { UserInfo } from "../../../common/types/user-info.type";
 
 @Entity("posts")
 export class Post {
@@ -38,9 +32,9 @@ export class Post {
     @ManyToOne(() => User, user => user.posts)
     user!: User;
 
-    toDto(user: UserInfo): PostDto {
+    toDto(): PostDto {
         const post = new PostDto();
-        post.user = user;
+        post.user = { id: this.user.id ?? 0, nickname: this.user.nickname ?? "삭제된 사용자" };
         post.title = this.title;
         post.content = this.content;
         post.likeCount = this.likeCount;

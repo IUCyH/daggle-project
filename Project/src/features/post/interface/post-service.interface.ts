@@ -21,9 +21,10 @@ export type SearchOptionValues = (typeof SearchOption)[keyof typeof SearchOption
 
 export interface IPostService {
 
-    getPosts(condition: GetPostDto): Promise<PostDto>;
-    searchPosts(option: SearchPostDto): Promise<PostDto>;
-    createPost(post: CreatePostDto): Promise<number>;
-    updatePost(post: UpdatePostDto): Promise<void>;
+    checkIsAuthor(postId: number, userId: number): Promise<boolean>;
+    getPosts(condition: GetPostDto): Promise<PostDto[]>;
+    searchPosts(option: SearchPostDto): Promise<PostDto[]>;
+    createPost(userId: number, post: CreatePostDto): Promise<number>;
+    updatePost(id: number, post: UpdatePostDto): Promise<void>;
     deletePost(id: number): Promise<void>;
 }

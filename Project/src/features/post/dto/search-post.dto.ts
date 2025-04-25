@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsIn } from "class-validator";
-import { SearchOption, SearchOptionValues } from "../interface/post-service.interface";
+import { Order, OrderValues, SearchOption, SearchOptionValues } from "../interface/post-service.interface";
 
 export class SearchPostDto {
 
@@ -9,4 +9,11 @@ export class SearchPostDto {
 
     @IsNotEmpty()
     keyword!: string;
+
+    @IsNotEmpty()
+    @IsIn(Object.values(Order))
+    order: OrderValues = Order.RECENT;
+
+    @IsNotEmpty()
+    date!: string;
 }
