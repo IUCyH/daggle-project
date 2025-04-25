@@ -97,6 +97,10 @@ export class PostService implements IPostService {
             .execute();
     }
 
+    async increaseWatchCount(id: number): Promise<void> {
+        await this.postRepository.increment({ id: id }, "watchCount", 1);
+    }
+
     async deletePost(id: number): Promise<void> {
         await this.postRepository.delete({ id: id });
     }

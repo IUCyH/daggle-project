@@ -26,5 +26,6 @@ export interface IPostService {
     searchPosts(option: SearchPostDto): Promise<PostDto[]>;
     createPost(userId: number, post: CreatePostDto): Promise<number>;
     updatePost(id: number, post: UpdatePostDto): Promise<void>;
+    increaseWatchCount(id: number): Promise<void>;
     deletePost(id: number): Promise<void>;
 }
