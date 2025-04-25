@@ -8,8 +8,8 @@ export interface ICommentService {
 
     checkIsAuthor(commentId: number, userId: number): Promise<boolean>;
     getComments(postId: number): Promise<CommentDto[]>
-    createComment(comment: CreateCommentDto): Promise<number>;
-    createReply(commentId: number, reply: CreateCommentDto): Promise<number>;
+    createComment(userId: number, comment: CreateCommentDto): Promise<number>;
+    createReply(userId: number, commentId: number, reply: CreateCommentDto): Promise<number>;
     updateComment(commentId: number, comment: UpdateCommentDto): Promise<void>;
     deleteComment(commentId: number): Promise<void>;
 }

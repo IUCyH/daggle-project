@@ -46,13 +46,13 @@ export class Post {
     user!: User;
 
     @OneToMany(() => Comment, comment => comment.post)
-    comments!: Comment[];
+    comments: Comment[] = [];
 
     @OneToMany(() => PostFile, postFile => postFile.post)
-    postFiles!: PostFile[];
+    postFiles: PostFile[] = [];
 
     @OneToMany(() => PostPhoto, postPhoto => postPhoto.post)
-    postPhotos!: PostPhoto[];
+    postPhotos: PostPhoto[] = [];
 
     toDto(): PostDto {
         const post = new PostDto();

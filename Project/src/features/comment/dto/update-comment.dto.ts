@@ -1,10 +1,6 @@
-import { IsNotEmpty, IsInt } from "class-validator";
+import { IsNotEmpty } from "class-validator";
 
 export class UpdateCommentDto {
-
-    @IsNotEmpty()
-    @IsInt()
-    id!: number;
 
     @IsNotEmpty()
     content!: string;
