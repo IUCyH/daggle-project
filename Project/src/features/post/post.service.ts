@@ -41,6 +41,7 @@ export class PostService implements IPostService {
 
         const posts = await selectQuery
             .where("post.createdAt < :date", { date: condition.date })
+            .andWhere("post.deletedAt IS NULL")
             .orderBy(orderCondition.first, "DESC")
             .addOrderBy(orderCondition.second, "DESC")
             .take(50)
@@ -64,6 +65,7 @@ export class PostService implements IPostService {
 
         const posts = await selectQuery
             .andWhere("post.createdAt < :date", { date: option.date })
+            .andWhere("post.deletedAt IS NULL")
             .orderBy(orderCondition.first, "DESC")
             .addOrderBy(orderCondition.second, "DESC")
             .take(50)
