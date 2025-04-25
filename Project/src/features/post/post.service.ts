@@ -34,7 +34,6 @@ export class PostService implements IPostService {
         return await this.postRepository.exists({ where: { id: postId, userId: userId } });
     }
 
-    // TODO: 댓글 서비스 구현 후 쿼리 수정 및 결과 반환 로직 수정
     async getPosts(condition: GetPostDto): Promise<PostDto[]> {
         const orderCondition = this.getOrderCondition(condition.order);
         const selectQuery = this.getPostSelectQuery();

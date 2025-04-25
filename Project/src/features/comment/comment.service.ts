@@ -26,7 +26,7 @@ export class CommentService implements ICommentService {
     }
 
     async getComments(postId: number): Promise<CommentDto[]> {
-        const parentComments = await this.commentRepository
+        const comments = await this.commentRepository
             .createQueryBuilder("comment")
             .select([
                 "comment.id",
@@ -35,48 +35,26 @@ export class CommentService implements ICommentService {
             ])
             .leftJoin("comment.user", "user")
             .addSelect(["user.id", "user.nickname"])
+            .leftJoin("comment.replies", "reply", "reply.deletedAt IS NULL")
+            .addSelect(["reply.id", "reply.content", "reply.createdAt"])
+            .leftJoin("reply.user", "replyUser")
+            .addSelect(["replyUser.id", "replyUser.nickname"])
             .where("comment.postId = :postId", { postId: postId })
             .andWhere("comment.parentId IS NULL")
             .andWhere(
                 new Brackets(qb => {
                     qb.where("comment.deletedAt IS NULL")
-                        .orWhere((qb: any) => {
-                            return qb
-                                .select(1)
-                                .from(Comment, "reply")
-                                .where("reply.parentId = comment.id")
-                                .andWhere("reply.deletedAt IS NULL")
-                                .getQuery();
-                        });
+                        .orWhere("reply.id IS NOT NULL");
                 })
             )
             .orderBy("comment.createdAt", "ASC")
+            .addOrderBy("reply.createdAt", "ASC")
             .getMany();
-
-        if(!parentComments || parentComments.length === 0) {
+        if(!comments || comments.length === 0) {
             throw new NotFoundException("Comment not found");
         }
 
-        const parentCommentIds = parentComments.map(comment => comment.id);
-        const replyComments = await this.commentRepository
-            .createQueryBuilder("comment")
-            .select([
-                "comment.id",
-                "comment.parentId",
-                "comment.content",
-                "comment.createdAt"
-            ])
-            .leftJoin("comment.user", "user")
-            .addSelect(["user.id", "user.nickname"])
-            .where("comment.parentId IN (:...parentIds)", { parentIds: parentCommentIds })
-            .andWhere("comment.deletedAt IS NULL")
-            .orderBy("comment.createdAt", "ASC")
-            .getMany();
-
-        return parentComments.map(parentComment => {
-            parentComment.replies = replyComments.filter(reply => reply.parentId === parentComment.id);
-            return parentComment.toDto();
-        });
+        return comments.map(comment => comment.toDto());
     }
 
     async createComment(userId: number, comment: CreateCommentDto): Promise<number> {
