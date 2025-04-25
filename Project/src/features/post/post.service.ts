@@ -177,6 +177,13 @@ export class PostService implements IPostService {
     }
 
     async increaseWatchCount(id: number): Promise<void> {
+        const exists = await this.postRepository.exists({
+            where: { id: id }
+        });
+        if(!exists) {
+            throw new NotFoundException("Post not found");
+        }
+
         await this.postRepository.increment({ id: id }, "watchCount", 1);
     }
 
