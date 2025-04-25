@@ -62,6 +62,17 @@ export class PostController {
         return await this.postService.searchPosts(query);
     }
 
+    @Get(":id/detail")
+    async getPostDetail(@Param("id") id: number) {
+        return await this.postService.getPostDetail(id);
+    }
+
+    @Post(":id/watch-count")
+    async increaseWatchCount(@Param("id") id: number) {
+        await this.postService.increaseWatchCount(id);
+        return new RequestSuccessDto();
+    }
+
     @UseGuards(JwtGuard)
     @UseInterceptors(
         AuthorCheckInterceptor,
