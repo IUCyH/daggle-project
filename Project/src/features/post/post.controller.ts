@@ -47,12 +47,18 @@ export class PostController {
     @UsePipes(new ValidationPipe({ transform: true }))
     @Get()
     async getPosts(@Query() query: GetPostDto) {
+        if(query.date === "0") {
+            query.date = "9999-12-31 23:59:59";
+        }
         return await this.postService.getPosts(query);
     }
 
     @UsePipes(new ValidationPipe({ transform: true }))
     @Get("search")
     async searchPosts(@Query() query: SearchPostDto) {
+        if(query.date === "0") {
+            query.date = "9999-12-31 23:59:59";
+        }
         return await this.postService.searchPosts(query);
     }
 

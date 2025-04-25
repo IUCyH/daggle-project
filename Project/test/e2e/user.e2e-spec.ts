@@ -19,7 +19,6 @@ import { CreateUserDto } from "../../src/features/user/dto/create-user.dto";
 import { SigninDto } from "../../src/features/auth/dto/signin.dto";
 import { TokenPairDto } from "../../src/features/auth/dto/token-pair.dto";
 
-// TODO: 계정 관련 요청 구현 후 JWT Guard 까지 통합 테스트 작성
 describe("UserController", () => {
     let app: INestApplication;
     let userRepository: Repository<User>;

@@ -26,19 +26,19 @@ export class Post {
     @Column({ type: "varchar", length: 1024 })
     content!: string;
 
-    @Column({ type: "int" })
+    @Column({ type: "int", default: 0 })
     likeCount!: number;
 
-    @Column({ type: "int" })
+    @Column({ type: "int", default: 0 })
     commentCount!: number;
 
-    @Column({ type: "int" })
+    @Column({ type: "int", default: 0 })
     watchCount!: number;
 
-    @Column({ type: "timestamp" })
+    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(3)" })
     createdAt!: string;
 
-    @Column({ type: "timestamp" })
+    @Column({ type: "timestamp", nullable: true })
     deletedAt!: string;
 
     @ManyToOne(() => User, user => user.posts)

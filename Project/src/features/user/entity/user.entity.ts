@@ -9,7 +9,7 @@ import { Post } from "../../post/entity/post.entity";
 import { UserDto } from "../dto/user.dto";
 import { TokenInfo } from "../../../common/auth/tokenVerification/entity/token-info.entity";
 
-@Entity()
+@Entity("users")
 export class User {
 
     @PrimaryGeneratedColumn()
