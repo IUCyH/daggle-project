@@ -42,7 +42,7 @@
     "ts-node": "^10.9.2"
   },
   "scripts": {
-    "start": "npx cross-env NODE_ENV=dev node dist/src/main.js",
-    "build": "npx cross-env NODE_ENV=prod node dist/src/main.js"
+    "start": "npx tsc; npx cross-env NODE_ENV=dev node dist/src/main.js",
+    "build": "npx tsc; npx cross-env NODE_ENV=prod node dist/src/main.js"
   }
 }

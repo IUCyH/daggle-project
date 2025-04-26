@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+    app:
+        container_name: daggle-app
+        build:
+            context: .
+            dockerfile: Docker/Dockerfile
+        environment:
+            - MODE=prod
+        ports:
+            - "8080:8080"
+        depends_on:
+            db:
+                condition: service_healthy
+        networks:
+            - app-network
+    db:
+        container_name: daggle-db
+        image: postgres:14
+        restart: always
+        environment:
+            - POSTGRES_USER=daggle
+            - POSTGRES_PASSWORD=abc123
+            - POSTGRES_DB=daggle_prod
+        ports:
+            - "5432:5432"
+        volumes:
+            - db-data:/var/lib/postgresql/data
+            - ./Docker/init.prod.sql:/docker-entrypoint-initdb.d/init.sql
+        networks:
+            - app-network
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U daggle -d daggle_prod"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+volumes:
+  db-data:
+
+networks:
+  app-network:
