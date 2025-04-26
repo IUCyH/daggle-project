@@ -26,7 +26,7 @@ services:
         ports:
             - "5432:5432"
         volumes:
-            - db-prod-data:/var/lib/postgresql/prod-data
+            - db-data:/var/lib/postgresql/data
             - ./Docker/init.prod.sql:/docker-entrypoint-initdb.d/init.sql
         networks:
             - app-network
@@ -37,7 +37,7 @@ services:
             retries: 5
 
 volumes:
-  db-prod-data:
+  db-data:
 
 networks:
   app-network:
