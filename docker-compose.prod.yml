@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-    app:
+    prod-app:
         container_name: daggle-prod-app
         build:
             context: .
@@ -15,7 +15,7 @@ services:
                 condition: service_healthy
         networks:
             - app-network
-    db:
+    prod-db:
         container_name: daggle-prod-db
         image: postgres:14
         restart: always
