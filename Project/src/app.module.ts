@@ -38,7 +38,7 @@ import path from "path";
         TypeOrmModule.forRootAsync({
             useFactory: () => ({
                 type: "postgres",
-                host: "daggle-db",
+                host: process.env.DB_HOST,
                 port: 5432,
                 username: process.env.DB_USERNAME,
                 password: process.env.DB_PASSWORD,
