@@ -5,7 +5,8 @@
 - 모든 명령어는 daggle-project 폴더에서 실행해야 합니다.
 
 컨테이너 초기화(작동이 잘 안되시면 한번 해주시면 됩니다.)
-docker-compose down -v
+dev: docker-compose down -v
+prod: docker-compose -f docker-compose.prod.yml down -v
 
 development 모드로 실행
 - docker-compose up --build
