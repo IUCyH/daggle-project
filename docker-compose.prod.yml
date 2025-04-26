@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
     app:
-        container_name: daggle-app
+        container_name: daggle-prod-app
         build:
             context: .
             dockerfile: Docker/Dockerfile
@@ -16,7 +16,7 @@ services:
         networks:
             - app-network
     db:
-        container_name: daggle-db
+        container_name: daggle-prod-db
         image: postgres:14
         restart: always
         environment:
