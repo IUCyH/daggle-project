@@ -132,6 +132,7 @@ dist
 **/*.iml
 **/*.DS_Store
 **/dist
-**/.*.env
 **/.env
+**/.dev.env
+**/.prod.env
 **/workspace.xml
