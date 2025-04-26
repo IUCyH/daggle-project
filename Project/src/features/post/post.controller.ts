@@ -128,7 +128,7 @@ export class PostController {
             storage: diskStorage({
                 destination: (req, res, callback) => {
                     const { id } = req.params;
-                    const uploadPath = path.join(process.cwd(), "uploads", "posts", id.toString(), "files");
+                    const uploadPath = path.join(process.cwd(), process.env.UPLOAD_PATH ?? "/static/uploads", "posts", id.toString(), "files");
 
                     if(!req.uploadStarted) {
                         FileHelperService.cleanFiles(uploadPath);
@@ -188,7 +188,7 @@ export class PostController {
             storage: diskStorage({
                 destination: (req, res, callback) => {
                     const { id } = req.params;
-                    const uploadPath = path.join(process.cwd(), "uploads", "posts", id.toString(), "photos");
+                    const uploadPath = path.join(process.cwd(), process.env.UPLOAD_PATH ?? "/static/uploads", "posts", id.toString(), "photos");
 
                     if(!req.uploadStarted) {
                         FileHelperService.cleanFiles(uploadPath);

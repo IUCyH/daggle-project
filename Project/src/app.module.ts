@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { ServeStaticModule } from "@nestjs/serve-static";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 import { WinstonModule } from "nest-winston";
@@ -18,6 +19,7 @@ import { AuthModule } from "./features/auth/auth.module";
 import { UserModule } from "./features/user/user.module";
 import { PostModule } from "./features/post/post.module";
 import { CommentModule } from "./features/comment/comment.module";
+import path from "path";
 
 @Module({
     imports: [
@@ -25,6 +27,12 @@ import { CommentModule } from "./features/comment/comment.module";
             cache: true,
             isGlobal: true,
             envFilePath: [".env", `.${process.env.NODE_ENV}.env`],
+        }),
+        ServeStaticModule.forRootAsync({
+            useFactory: () => ([{
+                rootPath: path.join(process.cwd(), process.env.UPLOAD_PATH ?? "static/uploads"),
+                serveRoot: process.env.UPLOAD_PATH
+            }])
         }),
         WinstonModule.forRoot(LogConfig),
         TypeOrmModule.forRootAsync({
