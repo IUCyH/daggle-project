@@ -4,7 +4,7 @@
 공통
 - 모든 명령어는 daggle-project 폴더에서 실행해야 합니다.
 
-컨테이너 초기화
+컨테이너 초기화(dev->prod 로 변경하거나 반대상황의 경우 해당 명령어를 실행시켜 꼭 초기화를 먼저 해주셔야 합니다.)
 docker-compose down -v
 
 development 모드로 실행
