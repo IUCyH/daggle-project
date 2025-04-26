@@ -11,7 +11,7 @@ import {
     UsePipes,
     ParseIntPipe
 } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiSecurity } from "@nestjs/swagger";
 import { SwaggerCommonErrorResponse } from "../../common/decorators/swagger-common-error-responses.decorator";
 import { ValidationPipe } from "@nestjs/common";
 import { AllFiledUndefinedTestPipe } from "../../common/pipes/all-filed-undefined-test.pipe";
@@ -36,6 +36,7 @@ export class UserController {
 
     @UseGuards(JwtGuard)
     @Get("me")
+    @ApiSecurity("bearer")
     @ApiOperation({ summary: "내 유저 정보를 가져옵니다." })
     @ApiResponse({ status: 200, description: "액세스 토큰에서 추출한 id에 해당하는 유저가 존재합니다.", type: UserDto })
     @ApiResponse({ status: 404, description: "액세스 토큰에서 추출한 id에 해당하는 유저가 존재하지 않습니다.", type: RequestFailedDto })
@@ -46,6 +47,7 @@ export class UserController {
 
     @UseGuards(JwtGuard)
     @Get(":id")
+    @ApiSecurity("bearer")
     @ApiOperation({ summary: "다른 유저 정보를 가져옵니다. 이메일은 제외됩니다." })
     @ApiResponse({ status: 200, description: "해당하는 id의 유저가 존재합니다.", type: UserDto })
     @ApiResponse({ status: 404, description: "해당하는 id의 유저가 존재하지 않습니다.", type: RequestFailedDto })
@@ -71,6 +73,7 @@ export class UserController {
     )
     @UseGuards(JwtGuard)
     @Patch("me")
+    @ApiSecurity("bearer")
     @ApiOperation({ summary: "내 유저 정보를 업데이트 합니다." })
     @ApiResponse({ status: 200, description: "유저 업데이트가 성공하였습니다.", type: RequestSuccessDto })
     @ApiResponse({ status: 400, description: "body가 잘못되었습니다.(에러 메세지 확인)", type: RequestFailedDto })
@@ -82,6 +85,7 @@ export class UserController {
 
     @UseGuards(JwtGuard)
     @Delete("me")
+    @ApiSecurity("bearer")
     @ApiOperation({ summary: "내 유저 정보를 삭제합니다.(soft delete)" })
     @ApiResponse({ status: 200, description: "유저 삭제에 성공하였습니다.", type: RequestSuccessDto })
     @SwaggerCommonErrorResponse()

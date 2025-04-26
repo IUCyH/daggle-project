@@ -6,6 +6,8 @@ import { WinstonModule } from "nest-winston";
 import { LogConfig } from "./configs/log.config";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { LoggingInterceptor } from "./common/interceptor/logging.interceptor";
+import { APP_FILTER } from "@nestjs/core";
+import { ExceptionLoggingFilter } from "./common/exceptionFilter/exception-logging.filter";
 
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -58,6 +60,10 @@ import { CommentModule } from "./features/comment/comment.module";
         {
             provide: APP_INTERCEPTOR,
             useClass: LoggingInterceptor
+        },
+        {
+            provide: APP_FILTER,
+            useClass: ExceptionLoggingFilter
         }
     ],
 })

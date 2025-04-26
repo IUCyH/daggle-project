@@ -8,13 +8,7 @@ async function bootstrap() {
         .setTitle("한다글다글 과제전형")
         .setDescription("과제전형 API 서버입니다.")
         .setVersion("1.0")
-        .addSecurity("access-token", {
-            type: "http",
-            in: "header",
-            scheme: "bearer",
-            bearerFormat: "JWT"
-        })
-        .addSecurity("refresh-token", {
+        .addSecurity("bearer", {
             type: "http",
             in: "header",
             scheme: "bearer",

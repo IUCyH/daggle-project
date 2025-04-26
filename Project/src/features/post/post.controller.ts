@@ -19,7 +19,7 @@ import {
     BadRequestException,
     ForbiddenException
 } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiSecurity } from "@nestjs/swagger";
 import { SwaggerCommonErrorResponse } from "../../common/decorators/swagger-common-error-responses.decorator";
 import { AuthorCheckInterceptor } from "../../common/interceptor/author-check.interceptor";
 import { FilesInterceptor } from "@nestjs/platform-express";
@@ -112,6 +112,7 @@ export class PostController {
 
     @UseGuards(JwtGuard)
     @Post(":id/like-count")
+    @ApiSecurity("bearer")
     @ApiOperation({ summary: "id에 해당하는 게시물의 좋아요를 토글합니다."})
     @ApiResponse({ status: 201, description: "id에 해당하는 게시물이 존재하고, 좋아요 토글이 성공하였습니다.", type: ToggleLikeDto })
     @ApiResponse({ status: 404, description: "id에 해당하는 게시물이 존재하지 않습니다.", type: RequestFailedDto })
@@ -146,6 +147,22 @@ export class PostController {
         })
     )
     @Post(":id/files")
+    @ApiSecurity("bearer")
+    @ApiConsumes("multipart/form-data")
+    @ApiBody({
+        schema: {
+            type: "object",
+            properties: {
+                "file": {
+                    type: "array",
+                    items: {
+                        type: "string",
+                        format: "binary"
+                    }
+                }
+            }
+        }
+    })
     @ApiOperation({ summary: "특정 게시물에 파일을 업로드 합니다. 최대 5개까지 동시에 업로드 가능합니다."})
     @ApiResponse({ status: 201, description: "업로드에 성공하였습니다.", type: [FileDto] })
     @ApiResponse({ status: 400, description: "업로드할 파일이 없습니다.", type: RequestFailedDto })
@@ -190,6 +207,22 @@ export class PostController {
         })
     )
     @Post(":id/photos")
+    @ApiSecurity("bearer")
+    @ApiConsumes("multipart/form-data")
+    @ApiBody({
+        schema: {
+            type: "object",
+            properties: {
+                "photo": {
+                    type: "array",
+                    items: {
+                        type: "string",
+                        format: "binary"
+                    }
+                }
+            }
+        }
+    })
     @ApiOperation({ summary: "특정 게시물에 사진을 업로드 합니다. 최대 20개까지 동시에 업로드 가능합니다."})
     @ApiResponse({ status: 201, description: "업로드에 성공하였습니다.", type: [PhotoDto] })
     @ApiResponse({ status: 400, description: "업로드할 사진이 없습니다.", type: RequestFailedDto })
@@ -210,6 +243,7 @@ export class PostController {
     @UseGuards(JwtGuard)
     @UsePipes(new ValidationPipe({ transform: true }))
     @Post()
+    @ApiSecurity("bearer")
     @ApiOperation({ summary: "게시물을 등록합니다." })
     @ApiResponse({ status: 201, description: "게시물 등록이 성공하였습니다. 게시물의 id를 반환합니다." })
     @ApiResponse({ status: 404, description: "유저가 존재하지 않습니다.", type: RequestFailedDto })
@@ -225,6 +259,7 @@ export class PostController {
     )
     @UseGuards(JwtGuard)
     @Patch(":id")
+    @ApiSecurity("bearer")
     @ApiOperation({ summary: "게시물을 업데이트 합니다." })
     @ApiResponse({ status: 200, description: "게시물 업데이트에 성공하였습니다.", type: RequestSuccessDto })
     @ApiResponse({ status: 403, description: "유저가 존재하지 않거나 작성자가 아닙니다.", type: RequestFailedDto })
@@ -242,6 +277,7 @@ export class PostController {
 
     @UseGuards(JwtGuard)
     @Delete(":id")
+    @ApiSecurity("bearer")
     @ApiOperation({ summary: "게시물을 삭제합니다." })
     @ApiResponse({ status: 200, description: "게시물 삭제에 성공하였습니다.", type: RequestSuccessDto })
     @ApiResponse({ status: 403, description: "유저가 존재하지 않거나 작성자가 아닙니다.", type: RequestFailedDto })

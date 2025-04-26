@@ -7,7 +7,7 @@ import {
     UsePipes
 } from "@nestjs/common";
 import { ValidationPipe } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiSecurity } from "@nestjs/swagger";
 import { SwaggerCommonErrorResponse } from "../../common/decorators/swagger-common-error-responses.decorator";
 import { JwtGuard } from "../../common/auth/guards/jwt.guard";
 import { CurrentUser } from "../../common/decorators/current-user.decorator";
@@ -38,6 +38,7 @@ export class AuthController {
 
     @UseGuards(JwtGuard)
     @Post("signout")
+    @ApiSecurity("bearer")
     @ApiOperation({ summary: "만료되지 않은 액세스 토큰을 받아 액세스 토큰과 리프레시 토큰을 무효화 합니다." })
     @ApiResponse({ status: 201, description: "무효화에 성공하였습니다.", type: RequestSuccessDto })
     @SwaggerCommonErrorResponse()
