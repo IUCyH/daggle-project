@@ -64,7 +64,7 @@ export class CommentService implements ICommentService {
         if(!userExists) {
             throw new NotFoundException("User not found");
         }
-        const postExists = await this.postRepository.exists({ where: { id: comment.postId } });
+        const postExists = await this.postRepository.exists({ where: { id: comment.postId, deletedAt: IsNull() } });
         if(!postExists) {
             throw new NotFoundException("Post not found");
         }
@@ -149,6 +149,13 @@ export class CommentService implements ICommentService {
     }
 
     async updateComment(commentId: number, comment: UpdateCommentDto): Promise<void> {
+        const exists = await this.commentRepository.exists({
+            where: { id: commentId, deletedAt: IsNull() }
+        });
+        if(!exists) {
+            throw new NotFoundException("Comment not found");
+        }
+
         await this.commentRepository
             .createQueryBuilder()
             .update()
@@ -160,20 +167,27 @@ export class CommentService implements ICommentService {
     }
 
     async deleteComment(commentId: number): Promise<void> {
+        const exists = await this.commentRepository.exists({
+            where: { id: commentId, deletedAt: IsNull() }
+        });
+        if(!exists) {
+            throw new NotFoundException("Comment not found");
+        }
+
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
 
         try {
-            const post = await queryRunner.manager
+            const joinedComment = await queryRunner.manager
                 .createQueryBuilder(Comment, "comment")
                 .select()
                 .leftJoin("comment.post", "post")
                 .addSelect("post.id")
                 .where("comment.id = :id", { id: commentId })
                 .getOne();
-            if(!post) {
-                throw new NotFoundException("Post not found");
+            if(!joinedComment) {
+                throw new NotFoundException("Post not found"); // Comment 테이블에서 Post 테이블에 조인하였지만 해당하는 Post 데이터가 없음
             }
 
             await queryRunner.manager
@@ -186,7 +200,7 @@ export class CommentService implements ICommentService {
                     END 
                 `
                 })
-                .where("id = :id", { id: post.id })
+                .where("id = :id", { id: joinedComment.post.id })
                 .execute();
 
             await queryRunner.manager
