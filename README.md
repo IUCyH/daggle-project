@@ -13,8 +13,10 @@ development 모드로 실행
 production 모드로 실행
 - docker-compose -f docker-compose.prod.yml up --build
 ~~~
-## API URL: localhost:8080
-## API 문서: localhost:8080/docs
+## API URL:
+- dev: localhost:8080
+- prod: localhost:80
+## API 문서: /docs
 
 # 핵심내용
 - 토큰 재사용 방지를 위해 액세스 토큰에 jti 추가 및 관리
