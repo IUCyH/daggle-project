@@ -9,12 +9,12 @@ services:
         environment:
             - MODE=prod
         ports:
-            - "8080:8080"
+            - "80:8080"
         depends_on:
             prod-db:
                 condition: service_healthy
         networks:
-            - app-network
+            - app-prod-network
     prod-db:
         container_name: daggle-prod-db
         image: postgres:14
@@ -29,7 +29,7 @@ services:
             - db-prod-data:/var/lib/postgresql/data
             - ./Docker/init.prod.sql:/docker-entrypoint-initdb.d/init.sql
         networks:
-            - app-network
+            - app-prod-network
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -U daggle -d daggle_prod"]
             interval: 5s
@@ -40,4 +40,4 @@ volumes:
   db-prod-data:
 
 networks:
-  app-network:
+  app-prod-network:
