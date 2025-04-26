@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository, InjectDataSource } from "@nestjs/typeorm";
-import { Repository, DataSource } from "typeorm";
+import { Repository, DataSource, IsNull } from "typeorm";
 import { Post } from "./entity/post.entity";
 import { PostFile } from "./entity/post-file.entity";
 import { PostPhoto } from "./entity/post-photo.entity";
@@ -116,6 +116,13 @@ export class PostService implements IPostService {
     }
 
     async updatePost(id: number, post: UpdatePostDto): Promise<void> {
+        const exists = await this.postRepository.exists({
+            where: { id: id, deletedAt: IsNull() }
+        });
+        if(!exists) {
+            throw new NotFoundException("Post not found");
+        }
+
         await this.postRepository
             .createQueryBuilder()
             .update()
@@ -183,7 +190,7 @@ export class PostService implements IPostService {
 
     async increaseWatchCount(id: number): Promise<void> {
         const exists = await this.postRepository.exists({
-            where: { id: id }
+            where: { id: id, deletedAt: IsNull() }
         });
         if(!exists) {
             throw new NotFoundException("Post not found");
@@ -232,6 +239,13 @@ export class PostService implements IPostService {
     }
 
     async deletePost(id: number): Promise<void> {
+        const exists = await this.postRepository.exists({
+            where: { id: id, deletedAt: IsNull() }
+        });
+        if(!exists) {
+            throw new NotFoundException("Post not found");
+        }
+
         await this.postRepository.update({ id: id }, { deletedAt: new Date().toISOString() });
     }
 

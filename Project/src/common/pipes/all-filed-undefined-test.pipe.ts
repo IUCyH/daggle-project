@@ -12,7 +12,7 @@ import {
 export class AllFiledUndefinedTestPipe implements PipeTransform {
     transform(value: any, metadata: ArgumentMetadata) {
         if (!value || typeof value !== "object") {
-            throw new BadRequestException("Invalid request body");
+            return value;
         }
 
         const isAllUndefined = Object.values(value).every(v => v === undefined);
