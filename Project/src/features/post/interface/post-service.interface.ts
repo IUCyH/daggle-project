@@ -6,6 +6,7 @@ import { UpdatePostDto } from "../dto/update-post.dto";
 import { PostDetailDto } from "../dto/post-detail.dto";
 import { FileDto } from "../dto/file.dto";
 import { PhotoDto } from "../dto/photo.dto";
+import { ToggleLikeDto } from "../dto/toggle-like.dto";
 
 export const POST_SERVICE = "postService";
 
@@ -35,6 +36,7 @@ export interface IPostService {
     updateFileLink(id: number, files: FileDto[]): Promise<void>;
     updatePhotoLink(id: number, photos: PhotoDto[]): Promise<void>;
     increaseWatchCount(id: number): Promise<void>;
+    toggleLikeCount(id: number, userId: number): Promise<ToggleLikeDto>;
 
     deletePost(id: number): Promise<void>;
 }

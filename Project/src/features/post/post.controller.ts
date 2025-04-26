@@ -84,6 +84,12 @@ export class PostController {
     }
 
     @UseGuards(JwtGuard)
+    @Post(":id/like-count")
+    async toggleLikeCount(@CurrentUser() user: UserInfo, @Param("id", ParseIntPipe) id: number) {
+        return await this.postService.toggleLikeCount(id, user.id);
+    }
+
+    @UseGuards(JwtGuard)
     @UseInterceptors(
         AuthorCheckInterceptor,
         FilesInterceptor("file", 5, {

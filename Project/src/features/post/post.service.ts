@@ -4,6 +4,7 @@ import { Repository, DataSource } from "typeorm";
 import { Post } from "./entity/post.entity";
 import { PostFile } from "./entity/post-file.entity";
 import { PostPhoto } from "./entity/post-photo.entity";
+import { UserLike } from "./entity/user-like.entity";
 
 import { UserCommonService } from "../../common/service/user/user-common.service";
 import { IPostService, OrderValues } from "./interface/post-service.interface";
@@ -18,6 +19,7 @@ import { FileDto } from "./dto/file.dto";
 import { NotFoundException } from "../../common/exceptions/not-found.exception";
 import { PostDetailDto } from "./dto/post-detail.dto";
 import { PhotoDto } from "./dto/photo.dto";
+import { ToggleLikeDto } from "./dto/toggle-like.dto";
 
 @Injectable()
 export class PostService implements IPostService {
@@ -188,6 +190,45 @@ export class PostService implements IPostService {
         }
 
         await this.postRepository.increment({ id: id }, "watchCount", 1);
+    }
+
+    async toggleLikeCount(id: number, userId: number): Promise<ToggleLikeDto> {
+        const queryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+
+        try {
+            const exist = await queryRunner.manager.exists(UserLike, {
+                where: { postId: id, userId: userId }
+            });
+            if(exist) {
+                await queryRunner.manager.delete(UserLike, { postId: id, userId: userId });
+                await queryRunner.manager
+                    .createQueryBuilder()
+                    .update(Post)
+                    .set({
+                        likeCount: () => `
+                            CASE
+                               WHEN "like_count" > 0 THEN "like_count" - 1
+                               ELSE "like_count"
+                            END 
+                        `
+                    })
+                    .where("id = :id", { id: id })
+                    .execute();
+            } else {
+                await queryRunner.manager.insert(UserLike, { postId: id, userId: userId });
+                await queryRunner.manager.increment(Post, { id: id }, "likeCount", 1);
+            }
+
+            await queryRunner.commitTransaction();
+            return new ToggleLikeDto(!exist); // 좋아요를 눌렀었다면 토글 후 결과는 false, 아니라면 true
+        } catch(error) {
+            await queryRunner.rollbackTransaction();
+            throw error;
+        } finally {
+            await queryRunner.release();
+        }
     }
 
     async deletePost(id: number): Promise<void> {
