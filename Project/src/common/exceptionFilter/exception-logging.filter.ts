@@ -31,7 +31,7 @@ export class ExceptionLoggingFilter implements ExceptionFilter {
         const dto = result.dto;
         const log = result.log;
 
-        this.logger.warn(`${request.method} ${request.url} ${dto.statusCode} ${log}`, "ExceptionLoggingFilter");
+        this.logger.warn(`${request.method} ${request.url} ${dto.statusCode}: ${log}`, "ExceptionLoggingFilter");
         response.status(dto.statusCode).json(dto);
     }
 
