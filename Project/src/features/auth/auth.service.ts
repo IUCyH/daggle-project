@@ -31,12 +31,12 @@ export class AuthService implements IAuthService {
             select: ["id", "password"]
         });
         if(!user) {
-            throw new UnauthorizedException("Invalid email or password");
+            throw new UnauthorizedException("Invalid email");
         }
 
         const verified = await this.hashHelperService.verify(user.password, password);
         if(!verified) {
-            throw new UnauthorizedException("Invalid email or password");
+            throw new UnauthorizedException("Invalid password");
         }
 
         return user.id;

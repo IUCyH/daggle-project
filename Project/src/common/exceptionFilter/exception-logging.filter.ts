@@ -27,12 +27,36 @@ export class ExceptionLoggingFilter implements ExceptionFilter {
         const response = context.getResponse<Response>();
         const request = context.getRequest<Request>();
 
+        const { className, methodName } = this.getContextMetaData(exception);
+
         const result = this.handleException(exception);
         const dto = result.dto;
         const log = result.log;
 
-        this.logger.warn(`${request.method} ${request.url} ${dto.statusCode}: ${log}`, "ExceptionLoggingFilter");
+        this.logger.warn(`${request.method} ${request.url} ${dto.statusCode}: ${log} at ${className}.${methodName}`, "ExceptionLoggingFilter");
         response.status(dto.statusCode).json(dto);
+    }
+
+    /**
+     * Error 객체에서 Stack의 첫 줄의 Class 이름과 Method 이름을 추출해 반환합니다.
+     * @param exception
+     * @private
+     */
+    private getContextMetaData(exception: any) {
+        const result = { className: "Unknown", methodName: "Unknown" };
+
+        if(exception instanceof Error && exception.stack) {
+            const splitResult = exception.stack.split("\n");
+            const firstLine = splitResult.find((line: string) => line.trim().startsWith("at"));
+            const matches = firstLine?.match(/at\s+(?:(.+?)\.)?(.*?)\s+\((.+?)\)/);
+
+            if(matches) {
+                result.className = matches[1] ?? "Global";
+                result.methodName = matches[2] ?? "Unknown";
+            }
+        }
+
+        return result;
     }
 
     private handleException(exception: any) {
